@@ -265,17 +265,17 @@ def AttConvLSTMSpeechModel(nCategories, samplingrate = 16000, inputLength = 1600
     x = Lambda(lambda q: q[:, np.newaxis,  np.newaxis, :, :])(x)
 
     # note that convoltions modify the shape of the tensors, we would need to adapt the consequent part of the network
-    # but to preserve the interpretability of the attention mechanism, kernel and strides have been chosen to keep constant shape
-    x = Bidirectional(ConvLSTM2D(filters=1, data_format='channels_first', kernel_size= (5,1), strides= (1,2), return_sequences = True, padding='same')) (x) # [b_s, 1, 1, seq_len, vec_dim]
-    x = Bidirectional(ConvLSTM2D(filters=1, data_format='channels_first', kernel_size= (5,1), strides= (1,2), return_sequences = True, padding='same')) (x) # [b_s, 1, 1, seq_len, vec_dim]
+    x = Bidirectional(ConvLSTM2D(filters=1, data_format='channels_first', kernel_size= (5,1), return_sequences = True, padding='same')) (x) # [b_s, 1, 1, seq_len, vec_dim]
+    x = Bidirectional(ConvLSTM2D(filters=1, data_format='channels_first', kernel_size= (5,1), return_sequences = True, padding='same')) (x) # [b_s, 1, 1, seq_len, vec_dim]
 
     # we still conider the middle vector, but we have a different shape due to the ConvLSTM layer
     # first remove the extra dimensions
     x = Lambda(lambda q: K.squeeze(q, axis= 2))(x) 
     x = Lambda(lambda q: K.squeeze(q, axis= 1))(x)  # [b_s, seq_len, vec_dim]
-    return Model(inputs=[inputs], outputs=[x])
+    # NIK: we want to preserve interpretability of the attention. To do so we take shape back to the initial one
+    x = Dense(128)(x)
     xFirst = Lambda(lambda q: q[:,61]) (x) #[b_s, vec_dim]
-    query = Dense(320) (xFirst)
+    query = Dense(128) (xFirst)
 
     #dot product attention
     attScores = Dot(axes=[1,2])([query, x]) 
