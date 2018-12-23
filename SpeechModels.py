@@ -230,7 +230,7 @@ def AttGRUSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000):
 
 
 # Use convolutional LSTM 
-def AttConvLSTMSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000):
+def AttConvLSTMSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000, dropout = 0):
     #simple LSTM
     sr = samplingrate
     iLen = inputLength
@@ -265,7 +265,7 @@ def AttConvLSTMSpeechModel(nCategories, samplingrate = 16000, inputLength = 1600
     x = Lambda(lambda q: q[:, np.newaxis,  np.newaxis, :, :])(x)
 
     # note that convoltions modify the shape of the tensors, we would need to adapt the consequent part of the network
-    x = Bidirectional(ConvLSTM2D(filters=1, data_format='channels_first', kernel_size= (5,1), return_sequences = True, padding='same')) (x) # [b_s, 1, 1, seq_len, vec_dim]
+    x = Bidirectional(ConvLSTM2D(filters=1, data_format='channels_first', kernel_size= (5,1), return_sequences = True, padding='same', dropout=dropout)) (x) # [b_s, 1, 1, seq_len, vec_dim]
     x = Bidirectional(ConvLSTM2D(filters=1, data_format='channels_first', kernel_size= (5,1), return_sequences = True, padding='same')) (x) # [b_s, 1, 1, seq_len, vec_dim]
 
     # we still conider the middle vector, but we have a different shape due to the ConvLSTM layer
