@@ -1,0 +1,82 @@
+COMPLEXITY REDUCTION
+
+GRU model: Test Acc  0.940892
+
+
+LSTM Avg 1:
+	conv 10
+	conv 1
+	Bidir LSTM
+	Bidir LSTM
+	Test Acc:  0.94074
+
+LSTM Avg 2:
+	conv 5
+	conv 1
+	Bidir LSTM
+	Bidir LSTM
+	Test Acc:  0.94264
+
+LSTM Avg 3:
+	conv 1
+	Bidir LSTM
+	Bidir LSTM
+	Test Acc:   0.9391
+
+LSTM Avg 4:
+	conv 5
+	Bidir LSTM
+	Bidir LSTM
+	Test Acc:   0.9416239941477689
+
+LSTM Avg 5:
+	conv 1
+	Bidir LSTM
+	Test Acc:   0.92948
+
+
+RESULTS ENHANCEMENT
+
+RNN Emp 1:
+	conv 10
+	conv 10
+	conv 1
+	Bidir LSTM
+	Bidir LSTM
+	Test Acc:   0.9451
+
+RNN Emp 2:
+	conv 10
+	conv 10
+	conv 10
+	conv 1
+	Bidir LSTM
+	Bidir LSTM
+	Test Acc:   0.9452816
+
+RNN Emp 3:
+	conv 10
+	conv 1
+	Bidir LSTM
+	Bidir LSTM
+	Bidir LSTM
+	Test Acc:   0.9471836
+
+RNN Emp 4:
+	conv 10
+	conv 10
+	conv 10
+	conv 1
+	Bidir LSTM
+	Bidir LSTM
+	Bidir LSTM
+	Test Acc:   0.944696
+
+RNN Emp 5 Avg:
+	conv 10
+	conv 10
+	conv 10
+	conv 1
+	Bidir LSTM
+	Bidir LSTM
+	Test Acc:   0.9445501

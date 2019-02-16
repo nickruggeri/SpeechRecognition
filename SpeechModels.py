@@ -133,9 +133,13 @@ def AttRNNSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000):
     x = Permute((2,1,3)) (x)
 
     x = Conv2D(10, (5,1) , activation='relu', padding='same') (x)
-    x = BatchNormalization() (x)
+    x = BatchNormalization()(x)
+    x = Conv2D(10, (5,1) , activation='relu', padding='same') (x)
+    x = BatchNormalization()(x)
+    x = Conv2D(10, (5,1) , activation='relu', padding='same') (x)
+    x = BatchNormalization()(x)
     x = Conv2D(1, (5,1) , activation='relu', padding='same') (x)
-    x = BatchNormalization() (x)
+    x = BatchNormalization()(x)
 
     #x = Reshape((125, 80)) (x)
     x = Lambda(lambda q: K.squeeze(q, -1), name='squeeze_last_dim') (x) #keras.backend.squeeze(x, axis)
@@ -143,6 +147,7 @@ def AttRNNSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000):
     # CHANGE IF USING GPU
     #x = Bidirectional(CuDNNLSTM(64, return_sequences = True)) (x) # [b_s, seq_len, vec_dim]
     #x = Bidirectional(CuDNNLSTM(64, return_sequences = True)) (x) # [b_s, seq_len, vec_dim]
+    x = Bidirectional(LSTM(64, return_sequences = True)) (x) # [b_s, seq_len, vec_dim]
     x = Bidirectional(LSTM(64, return_sequences = True)) (x) # [b_s, seq_len, vec_dim]
     x = Bidirectional(LSTM(64, return_sequences = True)) (x) # [b_s, seq_len, vec_dim]
 
@@ -295,7 +300,7 @@ def AttConvLSTMSpeechModel(nCategories, samplingrate = 16000, inputLength = 1600
 
 
 # feed attention mechanism with average of features instead of middle one
-def AttRNNSpeechModel_Avg(nCategories, samplingrate = 16000, inputLength = 16000):
+def AttRNNSpeechModel(nCategories, samplingrate = 16000, inputLength = 16000):
     #simple LSTM
     sr = samplingrate
     iLen = inputLength
@@ -319,9 +324,13 @@ def AttRNNSpeechModel_Avg(nCategories, samplingrate = 16000, inputLength = 16000
     x = Permute((2,1,3)) (x)
 
     x = Conv2D(10, (5,1) , activation='relu', padding='same') (x)
-    x = BatchNormalization() (x)
+    x = BatchNormalization()(x)
+    x = Conv2D(10, (5,1) , activation='relu', padding='same') (x)
+    x = BatchNormalization()(x)
+    x = Conv2D(10, (5,1) , activation='relu', padding='same') (x)
+    x = BatchNormalization()(x)
     x = Conv2D(1, (5,1) , activation='relu', padding='same') (x)
-    x = BatchNormalization() (x)
+    x = BatchNormalization()(x)
 
     #x = Reshape((125, 80)) (x)
     x = Lambda(lambda q: K.squeeze(q, -1), name='squeeze_last_dim') (x) #keras.backend.squeeze(x, axis)
@@ -380,6 +389,9 @@ def CompressedAttLSTMpeechModel(nCategories, samplingrate = 16000, inputLength =
     x = Lambda(lambda q: q[:, np.newaxis, np.newaxis, :, :])(x) # [b_s, timeSteps, melDim, 1, 1]
 
     x = Bidirectional(ConvLSTM2D(filters=10, data_format='channels_first', kernel_size= (5,1), activation='relu', return_sequences = False, padding='same')) (x) # [b_s, 1, 1, seq_len, vec_dim]
+    x = BatchNormalization() (x)
+    x = Lambda(lambda q: q[:, np.newaxis, :, :, :])(x)
+    x = Bidirectional(ConvLSTM2D(filters=5, data_format='channels_first', kernel_size= (5,1), activation='relu', return_sequences = False, padding='same')) (x) # [b_s, 1, 1, seq_len, vec_dim]
     x = BatchNormalization() (x)
     x = Lambda(lambda q: q[:, np.newaxis, :, :, :])(x)
     x = Bidirectional(ConvLSTM2D(filters=1, data_format='channels_first', kernel_size= (5,1), activation='relu', return_sequences = False, padding='same')) (x) # [b_s, 1, 1, seq_len, vec_dim]
